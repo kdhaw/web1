@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>온라인 뱅킹</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <nav class="sidebar">
+            <div class="logo">
+                <h1>온라인 뱅킹</h1>
+            </div>
+            <ul class="menu">
+                <li><a href="index.html" class="active">대시보드</a></li>
+                <li><a href="account.html">계좌조회</a></li>
+                <li><a href="transfer.html">이체</a></li>
+                <li><a href="transactions.html">거래내역</a></li>
+                <li><a href="spending-report.html">소비리포트</a></li>
+                <li><a href="alerts.html">알림설정</a></li>
+            </ul>
+            <button class="logout-btn">로그아웃</button>
+        </nav>
+
+        <main class="main-content">
+            <header>
+                <h2>대시보드</h2>
+            </header>
+
+            <div class="dashboard-grid">
+                <!-- 계좌 잔액 섹션 -->
+                <section class="accounts-section">
+                    <div class="account-card">
+                        <div class="account-header">
+                            <div>
+                                <h3>입출금통장</h3>
+                                <p>123-456-789</p>
+                            </div>
+                            <span class="account-icon">💳</span>
+                        </div>
+                        <p class="balance">5,000,000원</p>
+                    </div>
+                    <div class="account-card">
+                        <div class="account-header">
+                            <div>
+                                <h3>저축예금</h3>
+                                <p>987-654-321</p>
+                            </div>
+                            <span class="account-icon">💰</span>
+                        </div>
+                        <p class="balance">10,000,000원</p>
+                    </div>
+                </section>
+
+                <!-- 최근 거래 내역 -->
+                <section class="transactions-section">
+                    <h3>최근 거래 내역</h3>
+                    <div class="transaction-list">
+                        <div class="transaction-item deposit">
+                            <div class="transaction-info">
+                                <span class="transaction-icon">↓</span>
+                                <div>
+                                    <p class="transaction-desc">급여</p>
+                                    <p class="transaction-date">2024-03-15</p>
+                                </div>
+                            </div>
+                            <p class="transaction-amount">+500,000원</p>
+                        </div>
+                        <div class="transaction-item withdrawal">
+                            <div class="transaction-info">
+                                <span class="transaction-icon">↑</span>
+                                <div>
+                                    <p class="transaction-desc">카드결제</p>
+                                    <p class="transaction-date">2024-03-14</p>
+                                </div>
+                            </div>
+                            <p class="transaction-amount">-150,000원</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 빠른 송금 -->
+                <section class="quick-transfer-section">
+                    <h3>빠른 송금</h3>
+                    <form id="transferForm" class="transfer-form">
+                        <div class="form-group">
+                            <label for="fromAccount">출금계좌</label>
+                            <select id="fromAccount" required>
+                                <option value="">계좌 선택</option>
+                                <option value="1">입출금통장 (123-456-789)</option>
+                                <option value="2">저축예금 (987-654-321)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="toAccount">입금계좌</label>
+                            <input type="text" id="toAccount" placeholder="계좌번호 입력" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="amount">이체금액</label>
+                            <input type="number" id="amount" placeholder="금액 입력" required>
+                        </div>
+                        <button type="submit" class="transfer-btn">이체하기</button>
+                    </form>
+                </section>
+            </div>
+        </main>
+    </div>
+    <script src="js/main.js"></script>
+</body>
+</html> 

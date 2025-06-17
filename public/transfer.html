@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>이체 - 온라인 뱅킹</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px;
+        }
+
+        .sidebar-header {
+            padding: 20px 0;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-menu {
+            margin-top: 20px;
+        }
+
+        .menu-item {
+            padding: 12px 15px;
+            display: flex;
+            align-items: center;
+            color: white;
+            text-decoration: none;
+            transition: background-color 0.3s;
+            border-radius: 5px;
+            margin-bottom: 5px;
+        }
+
+        .menu-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .menu-item.active {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            background-color: var(--background-color);
+        }
+
+        .transfer-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .transfer-header {
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--text-color);
+        }
+
+        .form-group select,
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .transfer-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+
+        .transfer-btn:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .error-message {
+            color: var(--error-color);
+            font-size: 0.9rem;
+            margin-top: 5px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h2>온라인 뱅킹</h2>
+            </div>
+            <div class="sidebar-menu">
+                <a href="dashboard.html" class="menu-item">
+                    <span>대시보드</span>
+                </a>
+                <a href="accounts.html" class="menu-item">
+                    <span>계좌 관리</span>
+                </a>
+                <a href="transfer.html" class="menu-item active">
+                    <span>이체</span>
+                </a>
+                <a href="transactions.html" class="menu-item">
+                    <span>거래 내역</span>
+                </a>
+                <a href="settings.html" class="menu-item">
+                    <span>설정</span>
+                </a>
+            </div>
+        </div>
+        <div class="main-content">
+            <div class="transfer-container">
+                <div class="transfer-header">
+                    <h1>계좌 이체</h1>
+                </div>
+                <form id="transferForm">
+                    <div class="form-group">
+                        <label for="fromAccount">출금 계좌</label>
+                        <select id="fromAccount" required>
+                            <option value="">계좌를 선택하세요</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="toAccount">입금 계좌</label>
+                        <input type="text" id="toAccount" placeholder="입금 계좌번호를 입력하세요" required>
+                        <div class="error-message" id="toAccountError"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="amount">이체 금액</label>
+                        <input type="number" id="amount" placeholder="이체할 금액을 입력하세요" required>
+                        <div class="error-message" id="amountError"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="description">이체 설명</label>
+                        <input type="text" id="description" placeholder="이체 설명을 입력하세요">
+                    </div>
+                    <button type="submit" class="transfer-btn">이체하기</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        const transferForm = document.getElementById('transferForm');
+        const fromAccountSelect = document.getElementById('fromAccount');
+        const toAccountError = document.getElementById('toAccountError');
+        const amountError = document.getElementById('amountError');
+
+        // 계좌 목록 가져오기
+        async function getAccounts() {
+            try {
+                const response = await fetch('/api/accounts');
+                const data = await response.json();
+                
+                if (response.ok) {
+                    displayAccounts(data);
+                } else {
+                    alert(data.message || '계좌 정보를 가져오는데 실패했습니다.');
+                }
+            } catch (error) {
+                console.error('계좌 정보 조회 중 오류:', error);
+                alert('계좌 정보 조회 중 오류가 발생했습니다.');
+            }
+        }
+
+        // 계좌 목록 표시
+        function displayAccounts(accounts) {
+            fromAccountSelect.innerHTML = '<option value="">계좌를 선택하세요</option>';
+            
+            accounts.forEach(account => {
+                const option = document.createElement('option');
+                option.value = account.account_number;
+                option.textContent = `${account.account_type} (${account.account_number}) - 잔액: ₩${account.balance.toLocaleString()}`;
+                fromAccountSelect.appendChild(option);
+            });
+        }
+
+        // 이체 처리
+        transferForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const fromAccount = document.getElementById('fromAccount').value;
+            const toAccount = document.getElementById('toAccount').value;
+            const amount = Number(document.getElementById('amount').value);
+            const description = document.getElementById('description').value;
+
+            // 유효성 검사
+            let isValid = true;
+
+            if (!fromAccount) {
+                alert('출금 계좌를 선택해주세요.');
+                isValid = false;
+            }
+
+            if (!toAccount) {
+                toAccountError.textContent = '입금 계좌번호를 입력해주세요.';
+                toAccountError.style.display = 'block';
+                isValid = false;
+            } else {
+                toAccountError.style.display = 'none';
+            }
+
+            if (!amount || amount <= 0) {
+                amountError.textContent = '유효한 금액을 입력해주세요.';
+                amountError.style.display = 'block';
+                isValid = false;
+            } else {
+                amountError.style.display = 'none';
+            }
+
+            if (!isValid) return;
+
+            try {
+                const response = await fetch('/api/transfer', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        fromAccount,
+                        toAccount,
+                        amount,
+                        description
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    alert('이체가 완료되었습니다.');
+                    window.location.href = '/accounts.html';
+                } else {
+                    alert(data.message || '이체에 실패했습니다.');
+                }
+            } catch (error) {
+                console.error('이체 처리 중 오류:', error);
+                alert('이체 처리 중 오류가 발생했습니다.');
+            }
+        });
+
+        // 페이지 로드 시 계좌 목록 가져오기
+        document.addEventListener('DOMContentLoaded', getAccounts);
+    </script>
+</body>
+</html> 

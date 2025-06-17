@@ -1,0 +1,67 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 210 40% 98%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 221.2 83.2% 53.3%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 221.2 83.2% 53.3%;
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-bank-background text-bank-text;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-bank-primary text-white px-4 py-2 rounded-button hover:bg-bank-primary-hover transition-colors;
+  }
+  
+  .btn-secondary {
+    @apply bg-bank-secondary text-white px-4 py-2 rounded-button hover:opacity-90 transition-opacity;
+  }
+  
+  .btn-accent {
+    @apply bg-bank-accent text-white px-4 py-2 rounded-button hover:opacity-90 transition-opacity;
+  }
+  
+  .card {
+    @apply bg-bank-card rounded-card p-5 shadow-md;
+  }
+  
+  .input-field {
+    @apply w-full px-3 py-2 border border-gray-300 rounded-input focus:outline-none focus:ring-2 focus:ring-bank-primary focus:border-transparent;
+  }
+  
+  .error-message {
+    @apply text-bank-danger text-sm mt-1 animate-shake;
+  }
+  
+  .success-message {
+    @apply text-bank-accent text-sm mt-1 animate-fade-in;
+  }
+}

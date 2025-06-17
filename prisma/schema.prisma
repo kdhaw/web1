@@ -1,0 +1,60 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = "mysql://bank_user:bank_password@localhost:3306/bank_db"
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  username  String   @unique
+  password  String
+  name      String
+  email     String   @unique
+  phone     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  accounts  Account[]
+  transfers Transfer[] @relation("FromUser")
+  received  Transfer[] @relation("ToUser")
+}
+
+model Account {
+  id          Int      @id @default(autoincrement())
+  number      String   @unique
+  type        String   // checking, savings
+  balance     Float    @default(0)
+  interest    Float    @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  userId      Int
+  user        User     @relation(fields: [userId], references: [id])
+  transfers   Transfer[] @relation("FromAccount")
+  received    Transfer[] @relation("ToAccount")
+}
+
+model Transfer {
+  id          Int      @id @default(autoincrement())
+  amount      Float
+  description String?
+  status      String   // pending, completed, failed
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  fromUserId  Int
+  toUserId    Int
+  fromAccountId Int
+  toAccountId   Int
+  fromUser    User     @relation("FromUser", fields: [fromUserId], references: [id])
+  toUser      User     @relation("ToUser", fields: [toUserId], references: [id])
+  fromAccount Account  @relation("FromAccount", fields: [fromAccountId], references: [id])
+  toAccount   Account  @relation("ToAccount", fields: [toAccountId], references: [id])
+}

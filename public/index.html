@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>온라인 뱅킹 - 메인</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .welcome-message {
+            font-size: 24px;
+            color: var(--primary-color);
+        }
+
+        .logout-btn {
+            padding: 10px 20px;
+            background-color: var(--error-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .logout-btn:hover {
+            background-color: #c82333;
+        }
+
+        .accounts-section {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            color: var(--text-color);
+            margin-bottom: 20px;
+        }
+
+        .account-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .account-card {
+            background-color: var(--background-color);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+        }
+
+        .account-number {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .account-balance {
+            font-size: 24px;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .account-type {
+            color: var(--text-color);
+            font-size: 14px;
+        }
+
+        .transactions-section {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .transaction-list {
+            list-style: none;
+        }
+
+        .transaction-item {
+            padding: 15px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .transaction-item:last-child {
+            border-bottom: none;
+        }
+
+        .transaction-info {
+            flex: 1;
+        }
+
+        .transaction-amount {
+            font-weight: 600;
+        }
+
+        .transaction-amount.deposit {
+            color: #28a745;
+        }
+
+        .transaction-amount.withdraw {
+            color: var(--error-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="header">
+            <div class="welcome-message">환영합니다, <span id="userName">사용자</span>님!</div>
+            <button class="logout-btn" onclick="logout()">로그아웃</button>
+        </div>
+
+        <div class="accounts-section">
+            <h2 class="section-title">내 계좌</h2>
+            <div class="account-list" id="accountList">
+                <!-- 계좌 정보가 여기에 동적으로 추가됩니다 -->
+            </div>
+        </div>
+
+        <div class="transactions-section">
+            <h2 class="section-title">최근 거래 내역</h2>
+            <ul class="transaction-list" id="transactionList">
+                <!-- 거래 내역이 여기에 동적으로 추가됩니다 -->
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // 로그인 체크
+        function checkAuth() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = '/login.html';
+                return;
+            }
+            return token;
+        }
+
+        // 로그아웃
+        function logout() {
+            localStorage.removeItem('token');
+            window.location.href = '/login.html';
+        }
+
+        // 계좌 정보 가져오기
+        async function fetchAccounts() {
+            const token = checkAuth();
+            if (!token) return;
+
+            try {
+                const response = await fetch('/api/accounts', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('계좌 정보를 가져오는데 실패했습니다.');
+                }
+
+                const accounts = await response.json();
+                const accountList = document.getElementById('accountList');
+                accountList.innerHTML = accounts.map(account => `
+                    <div class="account-card">
+                        <div class="account-number">${account.account_number}</div>
+                        <div class="account-balance">${account.balance.toLocaleString()}원</div>
+                        <div class="account-type">${account.account_type}</div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('계좌 정보 조회 중 오류:', error);
+                alert('계좌 정보를 불러오는데 실패했습니다.');
+            }
+        }
+
+        // 거래 내역 가져오기
+        async function fetchTransactions() {
+            const token = checkAuth();
+            if (!token) return;
+
+            try {
+                const response = await fetch('/api/transactions', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('거래 내역을 가져오는데 실패했습니다.');
+                }
+
+                const transactions = await response.json();
+                const transactionList = document.getElementById('transactionList');
+                transactionList.innerHTML = transactions.map(transaction => `
+                    <li class="transaction-item">
+                        <div class="transaction-info">
+                            <div>${transaction.description}</div>
+                            <div>${new Date(transaction.created_at).toLocaleString()}</div>
+                        </div>
+                        <div class="transaction-amount ${transaction.type === '입금' ? 'deposit' : 'withdraw'}">
+                            ${transaction.type === '입금' ? '+' : '-'}${transaction.amount.toLocaleString()}원
+                        </div>
+                    </li>
+                `).join('');
+            } catch (error) {
+                console.error('거래 내역 조회 중 오류:', error);
+                alert('거래 내역을 불러오는데 실패했습니다.');
+            }
+        }
+
+        // 페이지 로드 시 실행
+        window.addEventListener('load', () => {
+            checkAuth();
+            fetchAccounts();
+            fetchTransactions();
+        });
+    </script>
+</body>
+</html> 

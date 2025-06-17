@@ -3,109 +3,277 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>온라인 뱅킹</title>
-    <link rel="stylesheet" href="css/style.css">
+    <title>KB 디지털뱅킹</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
-        <nav class="sidebar">
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
             <div class="logo">
-                <h1>온라인 뱅킹</h1>
+                <i class="fas fa-university"></i>
+                <div class="logo-text">
+                    <h1>KB 디지털뱅킹</h1>
+                    <p>개인뱅킹</p>
+                </div>
             </div>
-            <ul class="menu">
-                <li><a href="index.html" class="active">대시보드</a></li>
-                <li><a href="account.html">계좌조회</a></li>
-                <li><a href="transfer.html">이체</a></li>
-                <li><a href="transactions.html">거래내역</a></li>
-                <li><a href="spending-report.html">소비리포트</a></li>
-                <li><a href="alerts.html">알림설정</a></li>
-            </ul>
-            <button class="logout-btn">로그아웃</button>
+        </div>
+
+        <nav class="sidebar-nav">
+            <div class="nav-section">
+                <h3>메인 메뉴</h3>
+                <ul>
+                    <li><a href="#" data-page="dashboard" class="nav-link active">
+                        <i class="fas fa-home"></i> 대시보드
+                    </a></li>
+                    <li><a href="#" data-page="account" class="nav-link">
+                        <i class="fas fa-wallet"></i> 계좌 조회
+                    </a></li>
+                    <li><a href="#" data-page="transfer" class="nav-link">
+                        <i class="fas fa-paper-plane"></i> 계좌 이체
+                    </a></li>
+                    <li><a href="#" data-page="transactions" class="nav-link">
+                        <i class="fas fa-receipt"></i> 거래 내역
+                    </a></li>
+                    <li><a href="#" data-page="spending" class="nav-link">
+                        <i class="fas fa-chart-pie"></i> 소비 리포트
+                        <span class="badge">NEW</span>
+                    </a></li>
+                </ul>
+            </div>
+
+            <div class="nav-section">
+                <h3>관리</h3>
+                <ul>
+                    <li><a href="#" data-page="alerts" class="nav-link">
+                        <i class="fas fa-bell"></i> 알림 설정
+                        <span class="badge danger">3</span>
+                    </a></li>
+                    <li><a href="#" data-page="settings" class="nav-link">
+                        <i class="fas fa-cog"></i> 설정
+                    </a></li>
+                </ul>
+            </div>
+
+            <div class="nav-section">
+                <h3>관리자</h3>
+                <ul>
+                    <li><a href="#" data-page="admin" class="nav-link">
+                        <i class="fas fa-users"></i> 관리자 대시보드
+                    </a></li>
+                </ul>
+            </div>
         </nav>
 
-        <main class="main-content">
-            <header>
-                <h2>대시보드</h2>
-            </header>
-
-            <div class="dashboard-grid">
-                <!-- 계좌 잔액 섹션 -->
-                <section class="accounts-section">
-                    <div class="account-card">
-                        <div class="account-header">
-                            <div>
-                                <h3>입출금통장</h3>
-                                <p>123-456-789</p>
-                            </div>
-                            <span class="account-icon">💳</span>
-                        </div>
-                        <p class="balance">5,000,000원</p>
-                    </div>
-                    <div class="account-card">
-                        <div class="account-header">
-                            <div>
-                                <h3>저축예금</h3>
-                                <p>987-654-321</p>
-                            </div>
-                            <span class="account-icon">💰</span>
-                        </div>
-                        <p class="balance">10,000,000원</p>
-                    </div>
-                </section>
-
-                <!-- 최근 거래 내역 -->
-                <section class="transactions-section">
-                    <h3>최근 거래 내역</h3>
-                    <div class="transaction-list">
-                        <div class="transaction-item deposit">
-                            <div class="transaction-info">
-                                <span class="transaction-icon">↓</span>
-                                <div>
-                                    <p class="transaction-desc">급여</p>
-                                    <p class="transaction-date">2024-03-15</p>
-                                </div>
-                            </div>
-                            <p class="transaction-amount">+500,000원</p>
-                        </div>
-                        <div class="transaction-item withdrawal">
-                            <div class="transaction-info">
-                                <span class="transaction-icon">↑</span>
-                                <div>
-                                    <p class="transaction-desc">카드결제</p>
-                                    <p class="transaction-date">2024-03-14</p>
-                                </div>
-                            </div>
-                            <p class="transaction-amount">-150,000원</p>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- 빠른 송금 -->
-                <section class="quick-transfer-section">
-                    <h3>빠른 송금</h3>
-                    <form id="transferForm" class="transfer-form">
-                        <div class="form-group">
-                            <label for="fromAccount">출금계좌</label>
-                            <select id="fromAccount" required>
-                                <option value="">계좌 선택</option>
-                                <option value="1">입출금통장 (123-456-789)</option>
-                                <option value="2">저축예금 (987-654-321)</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="toAccount">입금계좌</label>
-                            <input type="text" id="toAccount" placeholder="계좌번호 입력" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="amount">이체금액</label>
-                            <input type="number" id="amount" placeholder="금액 입력" required>
-                        </div>
-                        <button type="submit" class="transfer-btn">이체하기</button>
-                    </form>
-                </section>
+        <div class="sidebar-footer">
+            <div class="user-profile">
+                <div class="avatar">홍</div>
+                <div class="user-info">
+                    <span class="name">홍길동</span>
+                    <span class="role">VIP 고객</span>
+                </div>
+                <i class="fas fa-chevron-down"></i>
             </div>
-        </main>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="header">
+            <div class="header-left">
+                <button class="sidebar-toggle" id="sidebarToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="page-title">
+                    <h1 id="pageTitle">대시보드</h1>
+                    <p id="pageSubtitle">오늘도 안전한 금융거래 되세요</p>
+                </div>
+            </div>
+
+            <div class="header-center">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="거래내역, 계좌번호 검색..." id="searchInput">
+                </div>
+            </div>
+
+            <div class="header-right">
+                <div class="quick-actions">
+                    <button class="quick-btn" data-page="transfer">
+                        <i class="fas fa-paper-plane"></i> 송금
+                    </button>
+                    <button class="quick-btn" data-page="transactions">
+                        <i class="fas fa-receipt"></i> 내역
+                    </button>
+                    <button class="quick-btn" data-page="account">
+                        <i class="fas fa-credit-card"></i> 카드
+                    </button>
+                </div>
+
+                <div class="notifications">
+                    <button class="notification-btn" id="notificationBtn">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-count">3</span>
+                    </button>
+                </div>
+
+                <div class="user-menu">
+                    <button class="user-btn" id="userMenuBtn">
+                        <div class="avatar">홍</div>
+                        <div class="user-info">
+                            <span class="name">홍길동</span>
+                            <span class="role">VIP 고객</span>
+                        </div>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <div class="page-content" id="pageContent">
+            <div class="page dashboard-page active" id="dashboard">
+                <div class="welcome-section">
+                    <h2>안녕하세요, 홍길동님</h2>
+                    <p>오늘도 안전한 금융거래 되세요.</p>
+                </div>
+
+                <div class="dashboard-grid">
+                    <div class="account-card main-account" data-page="account">
+                        <div class="account-header">
+                            <div class="account-info">
+                                <h3>KB Star 통장</h3>
+                                <p>123-456-789012</p>
+                            </div>
+                            <div class="account-actions">
+                                <button class="balance-toggle" id="balanceToggle">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <i class="fas fa-credit-card account-icon"></i>
+                            </div>
+                        </div>
+                        <div class="account-content">
+                            <div class="balance-section">
+                                <p class="balance-label">현재 잔액</p>
+                                <p class="balance-amount" id="mainBalance">5,420,000원</p>
+                            </div>
+                            <div class="account-stats">
+                                <div class="stat">
+                                    <p class="stat-label">이번 달 입금</p>
+                                    <p class="stat-value income">+3,512,500원</p>
+                                </div>
+                                <div class="stat">
+                                    <p class="stat-label">이번 달 출금</p>
+                                    <p class="stat-value expense">-1,289,000원</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="quick-services">
+                        <h3>빠른 서비스</h3>
+                        <div class="service-buttons">
+                            <button class="service-btn primary" data-page="transfer">
+                                <i class="fas fa-paper-plane"></i>
+                                송금하기
+                            </button>
+                            <button class="service-btn secondary" data-page="transactions">
+                                <i class="fas fa-receipt"></i>
+                                거래내역
+                            </button>
+                            <button class="service-btn accent" data-page="spending">
+                                <i class="fas fa-chart-line"></i>
+                                소비분석
+                            </button>
+                            <button class="service-btn purple" data-page="account">
+                                <i class="fas fa-wallet"></i>
+                                내 계좌
+                            </button>
+                            <button class="service-btn orange" data-page="admin">
+                                <i class="fas fa-user-shield"></i>
+                                관리자
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="charts-section">
+                    <div class="chart-card" data-page="spending">
+                        <div class="chart-header">
+                            <h3>월별 소비 추이</h3>
+                            <p>최근 6개월 소비 패턴</p>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="spendingChart" width="400" height="200"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-card" data-page="transactions">
+                        <div class="chart-header">
+                            <h3>최근 이체 현황</h3>
+                            <p>일별 이체 금액</p>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="transferChart" width="400" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="recent-transactions">
+                    <div class="section-header">
+                        <div>
+                            <h3>최근 거래 내역</h3>
+                            <p>최근 4건의 거래 내역입니다</p>
+                        </div>
+                        <button class="view-all-btn" data-page="transactions">전체 보기</button>
+                    </div>
+                    <div class="transactions-list" id="recentTransactionsList">
+                    </div>
+                </div>
+            </div>
+
+            <div class="page account-page" id="account" style="display: none;">
+            </div>
+
+            <div class="page transfer-page" id="transfer" style="display: none;">
+            </div>
+
+            <div class="page transactions-page" id="transactions" style="display: none;">
+            </div>
+
+            <div class="page spending-page" id="spending" style="display: none;">
+            </div>
+
+            <div class="page alerts-page" id="alerts" style="display: none;">
+            </div>
+
+            <div class="page settings-page" id="settings" style="display: none;">
+            </div>
+
+            <div class="page admin-page" id="admin" style="display: none;">
+            </div>
+        </div>
+    </main>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <div class="modal-overlay" id="modalOverlay" style="display: none;">
+        <div class="modal" id="modal">
+            <div class="modal-header">
+                <h3 id="modalTitle">알림</h3>
+                <button class="modal-close" id="modalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-content" id="modalContent">
+            </div>
+        </div>
     </div>
-    <script src="js/main.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/components.js"></script>
+    <script src="js/pages.js"></script>
+    <script src="js/app.js"></script>
 </body>
-</html> 
+</html>
